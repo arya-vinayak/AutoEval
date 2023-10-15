@@ -84,8 +84,11 @@ const ImageUpload: React.FC = () => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    if (selectedFile1) {
+  
+
+  const handleUpload = (index: number) => {
+    if (index === 1 && selectedFile1) {
+      setResult1('Uploading...');
       const formData = new FormData();
       formData.append('file', selectedFile1);
 
@@ -98,11 +101,10 @@ const ImageUpload: React.FC = () => {
           console.log(data)
           setResult1(data.summary_text);
         });
-    }
-  }, [selectedFile1, apiUrl]);
 
-  useEffect(() => {
-    if (selectedFile2) {
+    }
+    if (index === 2 && selectedFile2) {
+      setResult2('Uploading...');
       const formData = new FormData();
       formData.append('file', selectedFile2);
 
@@ -115,15 +117,6 @@ const ImageUpload: React.FC = () => {
           console.log(data.summary_text)
           setResult2(data.summary_text);
         });
-    }
-  }, [selectedFile2, apiUrl]);
-
-  const handleUpload = (index: number) => {
-    if (index === 1 && selectedFile1) {
-      setResult1('Uploading...');
-    }
-    if (index === 2 && selectedFile2) {
-      setResult2('Uploading...');
     }
   };
 
@@ -166,7 +159,7 @@ const ImageUpload: React.FC = () => {
             />
             <button
               onClick={() => handleUpload(index)}
-              className="m-2 bg-blue-500 text-white py-2 px-4 rounded-md"
+              className="m-2 bg-green-500 text-white py-2 px-4 rounded-md"
             >
               Upload {index}
             </button>
@@ -182,7 +175,7 @@ const ImageUpload: React.FC = () => {
       <div className="mt-8 text-center">
         <button
           onClick={handleComparison}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md"
+          className="bg-green-500 text-white py-2 px-4 rounded-md"
         >
           Compare Results
         </button>
