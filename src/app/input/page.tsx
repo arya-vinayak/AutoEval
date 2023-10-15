@@ -8,8 +8,36 @@ const ImageUpload: React.FC = () => {
   const [previewURL2, setPreviewURL2] = useState<string | null>(null);
   const [result1, setResult1] = useState<string | null>(null);
   const [result2, setResult2] = useState<string | null>(null);
+  const [comparisonResult, setComparisonResult] = useState<number | null>(null);
+
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  const handleComparison = () => {
+    if (result1 && result2) {
+      console.log(JSON.stringify({
+        expected: result1,
+        student: result2,
+      }))
+      // Make an API request to compare the two results
+      fetch(`${apiUrl}/compare/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          expected: result1,
+          student: result2,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.total_marks);
+          setComparisonResult(data.total_marks);
+        });
+    }
+  };
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     if (event.target.files && event.target.files[0]) {
@@ -78,7 +106,7 @@ const ImageUpload: React.FC = () => {
       const formData = new FormData();
       formData.append('file', selectedFile2);
 
-      fetch(`${apiUrl}/upload`, {
+      fetch(`${apiUrl}/uploadT`, {
         method: 'POST',
         body: formData,
       })
@@ -150,6 +178,19 @@ const ImageUpload: React.FC = () => {
             )}
           </div>
         ))}
+      </div>
+      <div className="mt-8 text-center">
+        <button
+          onClick={handleComparison}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md"
+        >
+          Compare Results
+        </button>
+        {comparisonResult !== null && (
+          <div className="text-center mt-4">
+            <p>Comparison Result: {comparisonResult}</p>
+          </div>
+        )}
       </div>
     </div>
   );
